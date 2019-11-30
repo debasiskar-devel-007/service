@@ -1,0 +1,126 @@
+<mat-card>
+  <mat-toolbar color="primary" style="justify-content: center; align-items: center;">
+    <h2 class="headerSpan">{{ header_name }}</h2>
+  </mat-toolbar>
+  <span class="formspan">
+    <mat-card-content class="example-container">
+
+
+      <form [formGroup]="serviceForm" autocomplete="off">
+
+
+
+        <!-- ------------------------------service title------------------- -->
+        <mat-form-field>
+          <input matInput placeholder="Service title" formControlName="service_title"
+          >
+          <mat-error *ngIf="!serviceForm.controls['service_title'].valid
+        && serviceForm.controls['service_title'].errors.required"> Service title is required.</mat-error>
+        </mat-form-field><br>
+        <!-- -------------------------------------------------------------- -->
+
+
+
+        <!-- --------------------------------description------------------- -->
+        <ckeditor [editor]="Editor" [config]="editorConfig" formControlName="description"
+          ></ckeditor>
+          <mat-error *ngIf="!serviceForm.controls['description'].valid
+          && serviceForm.controls['description'].errors.required && serviceForm.controls['description'].touched" > Please describe.</mat-error>
+        <br>
+        <!-- -------------------------------------------------------------- -->
+
+
+        <!-- --------------------------------priority------------------- -->
+        <mat-form-field>
+          <input matInput type="number" placeholder="Priority" formControlName="priority"
+           >
+           <mat-error *ngIf="!serviceForm.controls['priority'].valid
+           && serviceForm.controls['priority'].errors.required"> Priority is required.</mat-error>
+        </mat-form-field><br>
+        <!-- -------------------------------------------------------------- -->
+
+
+        <!-- --------------------------------status------------------- -->
+        <mat-label>Status:</mat-label><br>
+        <mat-checkbox color="primary" formControlName="status">Active</mat-checkbox><br>
+        <!-- -------------------------------------------------------------- -->
+
+
+
+
+        <!-- ______________________________________________FORM ARRAY_________________________________________ -->
+
+        <div formArrayName="bulletarr" class="bulletarr"
+          *ngFor="let blist of serviceForm.controls.bulletarr?.value; let i = index; trackBy: trackByFn">
+          <ng-container [formGroupName]="i">
+            <div class="top_header">
+              bullet list
+            </div>
+            <!-- ------------bullet title-----------  -->
+            <mat-form-field>
+              <input matInput formControlName="bullet_title" placeholder="Bullet title">
+              <mat-icon matSuffix>title</mat-icon>
+            </mat-form-field><br>
+            <!-- -----------------------------------  -->
+
+
+            <!-- --------------------bullet description-----------------  -->
+            <mat-form-field>
+              <textarea matInput formControlName="bullet_desc" placeholder="Bullet description"></textarea>
+              <mat-icon matSuffix>format_list_bulleted</mat-icon>
+            </mat-form-field><br>
+            <!-- ----------------------------------------------------------  -->
+          </ng-container>
+          <button (click)="addBulletList('','')" type="button">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button (click)="deleteBulletList()" *ngIf="i!=0" type="button">
+            <mat-icon>remove</mat-icon>
+          </button>
+        </div>
+        <!-- __________________________________________________________________________________________________________ -->
+
+        <h1>Service Image:</h1>
+        <lib-file-upload [config]="imageConfigData"></lib-file-upload>
+        <mat-error *ngIf="ErrCode==true">Please add just one service image.</mat-error>
+        <mat-error *ngIf="img_missing==true">Please provide a service image.</mat-error>
+        <!-- <mat-error *ngIf="serviceForm.controls['service_img'].errors && serviceForm.controls['service_img'].errors.required">Priority is required.</mat-error> -->
+
+
+
+        <mat-card-content class="files-view" *ngIf="flag==true">
+          <mat-card class="example-card">
+            <img mat-card-image [attr.src]="img_var">
+            <mat-card-title>{{ image_name }}</mat-card-title>
+            <mat-card-subtitle>{{ image_type }}</mat-card-subtitle>
+            <span class="closecard" (click)="clear_image()"><i class="material-icons">clear</i></span>
+          </mat-card>
+        </mat-card-content>
+
+        <!-- ______________________________________________________________________________________________________________ -->
+        <!-- Additional Image  -->
+        <h1>Additional Image:</h1>
+        <lib-file-upload [config]="imageConfigData2"></lib-file-upload>
+        <mat-error *ngIf="ErrCode==true">Please add just one additional image.</mat-error>
+
+
+
+
+        <mat-card-content class="files-view" *ngIf="flag2==true">
+          <mat-card class="example-card">
+            <img mat-card-image [attr.src]="img_var2">
+            <mat-card-title>{{ image_name2 }}</mat-card-title>
+            <mat-card-subtitle>{{ image_type2 }}</mat-card-subtitle>
+            <span class="closecard" (click)="clear_image2()"><i class="material-icons">clear</i></span>
+          </mat-card>
+        </mat-card-content>
+
+        <span><button type="button" class="submitbtn" mat-raised-button color="primary"
+            (click)="onSubmit()">{{buttonText}}</button></span>
+        <span><button type="reset" class="submitbtn" mat-raised-button color="primary"
+            (click)="resetserviceForm()">RESET</button></span>
+
+      </form>
+    </mat-card-content>
+  </span>
+</mat-card>
